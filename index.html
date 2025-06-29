@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealer - Kart Oyunu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Rakip Oyuncunun Alanı -->
+        <div id="opponent-area" class="player-area">
+            <h2>Rakip</h2>
+            <div class="player-hand" id="opponent-hand">
+                <!-- Rakip kartları buraya gelecek -->
+            </div>
+            <div class="bank-area">
+                <h4>Banka</h4>
+                <div class="card-area" id="opponent-bank"></div>
+            </div>
+            <div class="player-properties" id="opponent-properties">
+                <!-- Rakip mülkleri buraya gelecek -->
+            </div>
+        </div>
+
+        <!-- Oyun Alanı (Masa) -->
+        <div id="table-area">
+            <div id="deck-area">
+                <div class="card-pile" id="draw-pile">Deste</div>
+                <div class="card-pile" id="discard-pile">Iskarta</div>
+            </div>
+            <div id="game-controls">
+                <button id="end-turn-btn">Turu Bitir</button>
+            </div>
+        </div>
+
+        <!-- Oyuncunun Alanı -->
+        <div id="player-area" class="player-area">
+            <div class="player-properties" id="player-properties">
+                <!-- Oyuncu mülkleri buraya gelecek -->
+            </div>
+            <div class="bank-area">
+                <h4>Banka</h4>
+                <div class="card-area" id="player-bank"></div>
+            </div>
+            <h2>Sen</h2>
+            <div class="player-hand" id="player-hand">
+                <!-- Oyuncu kartları buraya gelecek -->
+            </div>
+        </div>
+        
+    </div>
+    <div id="notification-area"></div>
+    <div id="modal-backdrop" class="hidden">
+        <div id="modal-content">
+            <h3 id="modal-title">Başlık</h3>
+            <p id="modal-text">Metin...</p>
+            <div id="modal-input-area"></div>
+            <div id="modal-buttons">
+                <!-- Butonlar JavaScript ile eklenecek -->
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
