@@ -1,0 +1,344 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    height: 800px;
+    border: 2px solid #333;
+    background-color: #e0e0e0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.player-area {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #c9c9c9;
+    border: 1px solid #aaa;
+    margin: 5px;
+}
+
+#opponent-area {
+    flex-direction: row-reverse;
+}
+
+.player-hand {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    border: 2px dashed #888;
+    min-height: 120px;
+    padding: 5px;
+    background-color: #d8d8d8;
+}
+
+.player-properties {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    border: 2px dashed #888;
+    min-height: 100px;
+    padding: 5px;
+    margin: 0 10px;
+    background-color: #d8d8d8;
+    flex-wrap: wrap; /* Setler sığmazsa alta geçsin */
+}
+
+.property-set {
+    display: flex;
+    flex-direction: column; /* Kartlar üst üste gelsin */
+    padding: 5px;
+    border: 2px solid #666;
+    border-radius: 8px;
+    background-color: #c0c0c0;
+    min-width: 95px; /* Kart genişliği + padding */
+    position: relative;
+    transform: translateY(0); /* Üst üste binen kartlarda hover efektini iptal et */
+    margin-bottom: -100px; /* Hover durumunda da pozisyonu koru */
+}
+
+.property-set.completed-set {
+    border-color: #ffd700; /* Tamamlanmış set kenarlığı */
+    box-shadow: 0 0 10px #ffd700;
+}
+
+/* Kartların üst üste binmesi için */
+.property-set .card {
+    margin-bottom: -100px; 
+}
+
+.property-set .card:hover {
+    transform: translateY(0); /* Üst üste binen kartlarda hover efektini iptal et */
+    margin-bottom: -100px; /* Hover durumunda da pozisyonu koru */
+}
+
+.property-set .card:last-child {
+    margin-bottom: 0;
+}
+
+#table-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #aaa;
+    margin: 5px;
+}
+
+#deck-area {
+    display: flex;
+    gap: 20px;
+}
+
+.card-pile {
+    width: 80px;
+    height: 120px;
+    border: 2px solid #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#draw-pile {
+    background-color: #a0a0ff;
+}
+
+#discard-pile {
+    background-color: #ffa0a0;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 5px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none; /* Metin seçilmesini engeller */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.card img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+}
+
+.card-back {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.2em;
+}
+
+#bank-area {
+    border: 2px dashed #888;
+    padding: 10px;
+    min-width: 200px;
+    min-height: 120px;
+    text-align: center;
+}
+
+h2, h3 {
+    margin: 0 15px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-align: center;
+}
+
+#opponent-area h2 {
+    writing-mode: vertical-lr;
+}
+
+.bank-container {
+    border: 2px dashed #888;
+    padding: 10px;
+    min-width: 300px;
+    min-height: 140px;
+    text-align: center;
+    background-color: #d8d8d8;
+}
+
+.card-area {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    flex-wrap: wrap; /* Banka dolduğunda kartları alta indir */
+}
+
+#game-controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#game-controls button:hover {
+    background-color: #c82333;
+}
+
+.bank-area .card-area {
+    display: flex;
+    gap: -60px; /* Kartların üst üste binmesi için */
+    padding-left: 60px; /* Kaymayı dengelemek için */
+}
+
+.bank-area {
+    border: 2px dashed #888;
+    padding: 10px;
+    min-width: 150px;
+    min-height: 140px;
+    text-align: center;
+    background-color: #d8d8d8;
+    margin: 0 10px;
+}
+
+h2, h4 {
+    margin: 0 15px;
+    text-align: center;
+}
+
+#opponent-area h2, #opponent-area h4 {
+    writing-mode: vertical-lr;
+}
+
+#player-area h2, #player-area h4 {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+/* Notification System */
+#notification-area {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease-in-out;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Modal System */
+#modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#modal-backdrop.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+#modal-title {
+    margin-top: 0;
+}
+
+#modal-input-area {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+#modal-input-area .card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#modal-input-area .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #007bff;
+}
+
+#modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#modal-buttons button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#modal-buttons .confirm-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+#modal-buttons .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}

@@ -73,11 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeCardFrom = (player, cardId) => { let found = findCardIn(player.properties, cardId) || findCardIn({ bank: player.bank }, cardId) || findCardIn({ hand: player.hand }, cardId); if (found) { found.from.splice(found.index, 1); if (found.from.length === 0) { for(const color in player.properties) if(player.properties[color] === found.from) delete player.properties[color]; } return found.card; } return null; };
 
     async function handleCardInHandClick(event) {
-        if (gameState.currentPlayerIndex !== 0) { showNotification("Sıra rakipte!"); return; }
+        if (gameState.currentPlayerIndex !== 0) { 
+            showNotification("Sıra rakipte!"); 
+            return; 
+        }
         const cardDiv = event.target.closest('.card');
         if (!cardDiv) return;
         if (!gameState.hasDrawnCards) { showNotification("Oynamadan önce kart çekmelisiniz!"); return; }
         if (gameState.movesMadeThisTurn >= MAX_MOVES_PER_TURN) { showNotification("Bu turda hamle hakkınız bitti."); return; }
+        
         const cardId = cardDiv.dataset.cardId;
         const card = gameState.players[0].hand.find(c => c.id == cardId);
         if (!card) return;
@@ -166,17 +170,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCards = (player, amount) => { for (let i = 0; i < amount; i++) { if (gameState.deck.length === 0) { if (gameState.discardPile.length === 0) { showNotification('Deste ve ıskarta boş!'); break; } gameState.deck = [...gameState.discardPile]; gameState.discardPile = []; shuffleDeck(gameState.deck); showNotification('Deste bitti, ıskarta karıştırıldı.'); } player.hand.push(gameState.deck.pop()); } };
     const createCardElement = (card, isOpponentHand) => { const cardDiv = document.createElement('div'); cardDiv.classList.add('card'); if (card) cardDiv.dataset.cardId = card.id; const img = document.createElement('img'); if (isOpponentHand) { img.src = `assets/card_back.png`; img.alt = "Kart Arkası"; } else if (card && card.image) { img.src = `assets/${card.image}`; img.alt = card.name; } else { img.src = `assets/card_back.png`; img.alt = card.name || "Kart"; } cardDiv.appendChild(img); return cardDiv; };
     const renderProperties = (player, element) => { element.innerHTML = ''; for (const color in player.properties) { const propertySetDiv = document.createElement('div'); propertySetDiv.classList.add('property-set'); if (isSetCompleted(player, color)) propertySetDiv.classList.add('completed-set'); player.properties[color].forEach(card => propertySetDiv.appendChild(createCardElement(card, false))); element.appendChild(propertySetDiv); } };
-    const updateUI = () => { [playerHandDiv, opponentHandDiv, playerPropertiesDiv, opponentPropertiesDiv, playerBankDiv, opponentBankDiv].forEach(el => el.innerHTML = ''); drawPileDiv.textContent = `Deste (${gameState.deck.length})`; discardPileDiv.textContent = `Iskarta (${gameState.discardPile.length})`; const player = gameState.players[0]; const opponent = gameState.players[1]; player.hand.forEach(card => playerHandDiv.appendChild(createCardElement(card, false))); opponent.hand.forEach(card => opponentHandDiv.appendChild(createCardElement(card, true))); renderProperties(player, playerPropertiesDiv); renderProperties(opponent, opponentPropertiesDiv); player.bank.forEach(card => playerBankDiv.appendChild(createCardElement(card, false))); opponent.bank.forEach(card => opponentBankDiv.appendChild(createCardElement(card, false))); };
+    const updateUI = () => { 
+        [playerHandDiv, opponentHandDiv, playerPropertiesDiv, opponentPropertiesDiv, playerBankDiv, opponentBankDiv].forEach(el => el.innerHTML = ''); 
+        drawPileDiv.textContent = `Deste (${gameState.deck.length})`; 
+        discardPileDiv.textContent = `Iskarta (${gameState.discardPile.length})`; 
+        const player = gameState.players[0]; 
+        const opponent = gameState.players[1]; 
+        
+        // Normal görünüm: Alt oyuncu (Sen) kartları açık, üst oyuncu (Rakip) kartları kapalı
+        player.hand.forEach(card => playerHandDiv.appendChild(createCardElement(card, false))); // Alt: Sen - açık
+        opponent.hand.forEach(card => opponentHandDiv.appendChild(createCardElement(card, true))); // Üst: Rakip - kapalı
+        
+        renderProperties(player, playerPropertiesDiv); 
+        renderProperties(opponent, opponentPropertiesDiv); 
+        player.bank.forEach(card => playerBankDiv.appendChild(createCardElement(card, false))); 
+        opponent.bank.forEach(card => opponentBankDiv.appendChild(createCardElement(card, false))); 
+    };
     const shuffleDeck = (deck) => { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; } };
     const initializeGame = () => { gameState.deck = [...allCards]; shuffleDeck(gameState.deck); for (let i = 0; i < STARTING_HAND_SIZE; i++) { gameState.players.forEach(player => drawCards(player, 1)); } updateUI(); showNotification("Yeni Oyun Başladı!", 3000); };
     
+    // TEST ÖZELLİĞİ: Taraf değiştirme fonksiyonu - VERİLERİ TAKAS ET
+    const switchUserControl = () => {
+        // Player 1 ve Player 2'nin tüm verilerini takas et
+        const player1 = gameState.players[0];
+        const player2 = gameState.players[1];
+        
+        // Geçici olarak player1'in verilerini sakla
+        const tempHand = [...player1.hand];
+        const tempProperties = JSON.parse(JSON.stringify(player1.properties)); // Derin kopya
+        const tempBank = [...player1.bank];
+        
+        // Player2'nin verilerini player1'e aktar
+        player1.hand = [...player2.hand];
+        player1.properties = JSON.parse(JSON.stringify(player2.properties)); // Derin kopya
+        player1.bank = [...player2.bank];
+        
+        // Player1'in eski verilerini player2'ye aktar
+        player2.hand = tempHand;
+        player2.properties = tempProperties;
+        player2.bank = tempBank;
+        
+        // Sırayı Player 1'e getir ve hamle durumunu sıfırla
+        gameState.currentPlayerIndex = 0;
+        gameState.movesMadeThisTurn = 0;
+        gameState.hasDrawnCards = false;
+        
+        showNotification("Oyuncuların verileri takas edildi! Sıra sizde.");
+        console.log(`Player 0 (Sen) yeni kartları:`, gameState.players[0].hand.map(c => c.name));
+        console.log(`Player 1 (Rakip) yeni kartları:`, gameState.players[1].hand.map(c => c.name));
+        updateUI();
+    };
+
+    // Global scope'a ekle ki HTML'den çağrılabilsin
+    window.switchUserControl = switchUserControl;
+
     // --- EVENT LISTENERS & INITIALIZATION ---
     drawPileDiv.addEventListener('click', () => { if (gameState.currentPlayerIndex === 0) handleDrawPileClick() });
     playerHandDiv.addEventListener('click', (e) => { if (gameState.currentPlayerIndex === 0) handleCardInHandClick(e) });
     endTurnBtn.addEventListener('click', () => { if (gameState.currentPlayerIndex === 0) endTurn() });
     initializeGame();
 
-    // Kart çekme fonksiyonu
+    // EKSIK FONKSİYON: Kart çekme fonksiyonu
     const handleDrawPileClick = () => {
         if (gameState.hasDrawnCards) {
             showNotification("Bu turda zaten kart çektiniz!");
