@@ -134,12 +134,49 @@ Bir oyuncunun hamle yapması aşağıdaki zincirleme reaksiyonu tetikler:
 -   `#notification-area`: Ekranın sağ üstünde çıkan bildirimlerin kapsayıcısıdır.
 -   `#modal-backdrop`: Tüm ekranı kaplayan ve interaktif pencereleri (`modal-content`) ortalayan yarı saydam arka plan.
 
----
 ## 5. Proje Yol Haritası ve Gelecek Adımlar
 
-Proje, sağlam bir temel üzerine inşa edilmiş oynanabilir bir prototiptir. Aşağıdaki adımlar, projeyi tam sürüm bir oyuna dönüştürmek için izlenmesi gereken yoldur.
+### Faz 4: Öncelikli Geliştirme Yol Haritası (2024)
 
-#### Faz 5: Test ve Sağlamlaştırma (Sıradaki Adım)
+#### 1. Joker Kartların Tekrar Yer Değiştirilmesi
+- [1.1] Tapu alanındaki joker kartlar, setler arasında tekrar taşınabilir olmalı.
+- [1.2] UI'da joker kartlar için "taşı" veya "sürükle-bırak" özelliği eklenmeli.
+
+#### 2. Kira Olarak Ödenen Tapuların Doğru Yere Gitmesi
+- [2.1] Kira ödemesinde tapu kartları bankaya değil, tapu alanına eklenmeli.
+- [2.2] Kira ödemesi sırasında tapu ile para ayrımı netleştirilmeli.
+
+#### 3. Reddet Kartı ve Hamle Onayı
+- [3.1] Her hamle sonrası karşı taraftan onay alınmalı (reddet kartı olsa da olmasa da).
+- [3.2] Reddet kartı varsa, oyuncu kullanmak isteyip istemediğini seçebilmeli.
+- [3.3] Onay mekanizması, rakip kartlarını görmeden çalışmalı.
+
+#### 4. UI ve Görsel İyileştirmeler
+- [4.1] Kart sıralaması:
+  - En üst: Rakip kart arkaları
+  - Altında: Rakip banka
+  - Altında: Rakip tapular
+  - Orta: Masa (değişmeyecek)
+  - Alt: (üstten alta) Tapular, Banka, Kartlar (el)
+- [4.2] Kartlar üst üste gelirse, sağdan taşmalı şekilde dizilmeli.
+- [4.3] Aynı tür paralar ve tapular üst üste gelsin, üstte adedi yazsın (örn: 3 tane 1M).
+- [4.4] Her tapu setinin üstünde n/n (ör: 2/3) sayaç olsun.
+- [4.5] Banka ve tapu satırının sağında toplam set sayısı ve toplam para miktarı gösterilsin (örn: 3/5 set, 12M para).
+
+**Uygulama Sırası:**
+1. Joker kartların tekrar taşınabilmesi
+2. Kira ödemesinde tapuların doğru yere gitmesi
+3. Reddet ve hamle onay sistemi
+4. UI ve görsel iyileştirmeler (tüm alt başlıklar)
+
+Her adımda:
+- Önce ana sürümde (script.js, index.html, style.css)
+- Sonra test sürümünde (test/test-script.js, test/test-index.html, test/test-style.css)
+- Gerekirse ortak fonksiyonlar refactor edilecek
+
+---
+
+### Faz 5: Test ve Sağlamlaştırma (Sıradaki Adım)
 Bu fazın amacı, mevcut kod tabanının kararlılığını artırmak ve gelecekteki değişikliklerin mevcut işlevleri bozmamasını sağlamaktır.
 
 - [ ] **Test Altyapısı Kurulumu:**
@@ -158,7 +195,7 @@ Bu fazın amacı, mevcut kod tabanının kararlılığını artırmak ve gelecek
         - "Haciz" kartı oynandığında, modal pencerenin doğru setleri gösterdiğini, seçim yapıldıktan sonra `gameState`'in doğru güncellendiğini ve `updateUI`'ın bu değişikliği yansıttığını (DOM manipülasyonu test kütüphaneleri ile) kontrol et.
         - Kira ödemesi sırasında bankası yetmeyen oyuncunun mülklerinden ödeme yapmasının test edilmesi.
 
-#### Faz 6: Online Oyun ve Çok Oyunculu Altyapı
+### Faz 6: Online Oyun ve Çok Oyunculu Altyapı
 - [ ] **Sunucu Altyapısı:**
     - `Node.js` ve `Express` ile basit bir sunucu kurulmalı.
     - `WebSocket` (örneğin `ws` veya `Socket.IO` kütüphanesi ile) entegrasyonu yapılmalı.
@@ -169,7 +206,7 @@ Bu fazın amacı, mevcut kod tabanının kararlılığını artırmak ve gelecek
 - [ ] **Oyun Odası ve Eşleştirme Mantığı:**
     - Oyuncuların oyun odaları oluşturup/katılabileceği bir lobi sistemi kurulmalı.
 
-#### Faz 7: Son Dokunuşlar ve Kullanıcı Deneyimi
+### Faz 7: Son Dokunuşlar ve Kullanıcı Deneyimi
 - [ ] **Animasyonlar:** Kartların çekilmesi, oynanması, elden ele geçmesi gibi aksiyonlara akıcı CSS animasyonları eklenmeli.
 - [ ] **Ses Efektleri:** Kart çekme, para kazanma, hamle yapma gibi olaylar için basit ses efektleri eklenmeli.
 - [ ] **Responsive Tasarım İyileştirmeleri:** Oyunun farklı ekran boyutlarında (özellikle mobil cihazlarda) düzgün görünmesi için CSS güncellemeleri yapılmalı.
